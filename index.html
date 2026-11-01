@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Habitly — a private personal habit tracker with daily, weekly and monthly progress.">
+  <title>Habitly — Your little progress space</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+  <div class="auth-card">
+    <div class="auth-brand"><span class="brand-mark"><i class="bi bi-stars"></i></span><div><strong>Habitly</strong><small>Your little progress space</small></div></div>
+    <span class="eyebrow">YOUR PERSONAL SPACE</span>
+    <h1 id="authTitle">Welcome back</h1>
+    <p class="muted">Sign in to access your habits on all your devices.</p>
+    <form id="authForm">
+      <label class="form-label" for="authEmail">Email address</label>
+      <input class="form-control dark-input mb-3" id="authEmail" type="email" autocomplete="username" required placeholder="you@example.com">
+      <label class="form-label" for="authPassword">Password</label>
+      <input class="form-control dark-input mb-3" id="authPassword" type="password" autocomplete="current-password" required placeholder="Your password">
+      <button class="btn btn-gold w-100" id="authSubmit" type="submit">Sign in</button>
+    </form>
+    <p id="authStatus" class="small muted mt-3 mb-0" role="status">Use the email and password of the Supabase user you created.</p>
+  </div>
+</div>
+<div class="app-shell" id="appShell" hidden>
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" data-page="dashboard">
+      <span class="brand-mark"><i class="bi bi-stars"></i></span>
+      <span><strong>Habitly</strong><small>Your little progress space</small></span>
+    </a>
+    <div class="sidebar-label">WORKSPACE</div>
+    <nav class="nav flex-column app-nav" aria-label="Main navigation">
+      <button class="nav-link active" data-page="dashboard"><i class="bi bi-grid-1x2"></i> Dashboard</button>
+      <button class="nav-link" data-page="daily"><i class="bi bi-calendar2-check"></i> Daily habits</button>
+      <button class="nav-link" data-page="mandatory"><i class="bi bi-heart-pulse"></i> Mandatory</button>
+      <button class="nav-link" data-page="weekly"><i class="bi bi-calendar-week"></i> Weekly report</button>
+      <button class="nav-link" data-page="monthly"><i class="bi bi-calendar3"></i> Monthly report</button>
+      <button class="nav-link" data-page="settings"><i class="bi bi-gear"></i> Settings & backup</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="quote-card"><i class="bi bi-quote"></i><p>Small steps every day lead to big changes.</p><span>— A reminder to yourself</span></div>
+      <div class="sidebar-foot">PRIVATE • CLOUD SYNC ENABLED</div>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <button class="btn icon-btn d-lg-none" id="menuToggle" aria-label="Open navigation"><i class="bi bi-list"></i></button>
+      <div><div class="eyebrow">YOUR JOURNEY</div><h1 id="pageTitle">Dashboard</h1></div>
+      <div class="top-actions">
+        <span class="today-chip"><i class="bi bi-calendar-event"></i><span id="headerDate"></span></span>
+        <button class="btn btn-gold btn-sm" id="endDayBtn"><i class="bi bi-moon-stars me-1"></i> End my day</button>
+      </div>
+    </header>
+
+    <section class="page active" id="page-dashboard">
+      <div class="welcome-panel">
+        <div><span class="eyebrow light">A LITTLE PROGRESS, EVERY DAY</span><h2 id="welcomeTitle">Good things take time.</h2><p id="welcomeText">You don't need a perfect day. Just take the next small step.</p></div>
+        <div class="welcome-icon"><i class="bi bi-sunrise"></i></div>
+      </div>
+      <div class="row g-3 stat-grid">
+        <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon green"><i class="bi bi-check2-circle"></i></div><span>Today's progress</span><strong id="statToday">0%</strong><small id="statTodaySub">0 of 0 completed</small></div></div>
+        <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon gold"><i class="bi bi-heart-pulse"></i></div><span>Mandatory routine</span><strong id="statMandatory">0%</strong><small id="statMandatorySub">0 of 0 completed</small></div></div>
+        <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon blue"><i class="bi bi-calendar2-check"></i></div><span>Month consistency</span><strong id="statMonth">0%</strong><small>Eligible habit-days this month</small></div></div>
+        <div class="col-6 col-xl-3"><div class="stat-card"><div class="stat-icon purple"><i class="bi bi-fire"></i></div><span>Best current streak</span><strong id="statStreak">0 days</strong><small id="statStreakSub">Across your habits</small></div></div>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-xl-8"><div class="panel h-100"><div class="panel-heading"><div><span class="eyebrow">YOUR ACTIVITY</span><h3>Progress overview</h3></div><span class="subtle-tag">This month</span></div><div class="chart-wrap"><canvas id="dashboardChart" aria-label="Daily completion chart" role="img"></canvas></div></div></div>
+        <div class="col-xl-4"><div class="panel h-100"><div class="panel-heading"><div><span class="eyebrow">BALANCE</span><h3>Habit categories</h3></div></div><div class="chart-wrap doughnut-wrap"><canvas id="categoryChart" aria-label="Personal and mandatory completion chart" role="img"></canvas></div><div class="chart-legend"><span><i class="legend-dot emerald"></i> Personal</span><span><i class="legend-dot gold-dot"></i> Mandatory</span></div></div></div>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-lg-7"><div class="panel"><div class="panel-heading"><div><span class="eyebrow">AWARENESS</span><h3>Habits to look at</h3></div><button class="text-btn" data-page="daily">View habits <i class="bi bi-arrow-right"></i></button></div><div id="attentionList" class="attention-list"></div></div></div>
+        <div class="col-lg-5"><div class="panel"><div class="panel-heading"><div><span class="eyebrow">TODAY'S REFLECTION</span><h3>Your note</h3></div><i class="bi bi-journal-text panel-symbol"></i></div><textarea id="dashboardNote" class="form-control dark-input" rows="4" placeholder="What went well today? What would you like to improve?"></textarea><div class="d-flex justify-content-end mt-2"><button class="btn btn-outline-gold btn-sm" id="saveDashboardNote">Save reflection</button></div></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-daily">
+      <div class="page-intro"><div><span class="eyebrow">YOUR PERSONAL GOALS</span><h2>Daily habits</h2><p>Track your habits across the month. Every checkmark is a small promise kept.</p></div><button class="btn btn-gold" id="addHabitBtn"><i class="bi bi-plus-lg me-1"></i> Add habit</button></div>
+      <div class="panel">
+        <div class="table-toolbar"><div><h3 id="dailyMonthTitle">Monthly habit tracker</h3><p class="muted mb-0">Select a date heading to open that day's reflection. Scroll horizontally to see every date.</p></div><div class="month-controls"><button class="btn icon-btn" id="prevMonth" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button><input type="month" class="form-control month-input" id="dailyMonth"><button class="btn icon-btn" id="nextMonth" aria-label="Next month"><i class="bi bi-chevron-right"></i></button></div></div>
+        <div class="table-responsive habit-table-wrap"><table class="table habit-table" id="dailyTable"><thead id="dailyHead"></thead><tbody id="dailyBody"></tbody></table></div>
+        <div class="table-foot"><span><i class="bi bi-info-circle me-1"></i> Future dates and dates before a habit was added are disabled.</span><span id="dailyMonthSummary">0% complete</span></div>
+      </div>
+      <div class="row g-3 mt-1">
+        <div class="col-xl-7"><div class="panel"><div class="panel-heading"><div><span class="eyebrow">DAY DETAILS</span><h3 id="selectedDayTitle">Today's reflection</h3></div><input type="date" id="selectedDate" class="form-control date-input"></div><label class="form-label mt-3" for="dayNote">What did you do today?</label><textarea class="form-control dark-input" id="dayNote" rows="3" placeholder="Write a little about your day..."></textarea><label class="form-label mt-3" for="dayMood">How did the day feel?</label><select id="dayMood" class="form-select dark-input"><option value="">Choose an optional mood</option><option>Great</option><option>Good</option><option>Okay</option><option>Tiring</option><option>Challenging</option></select><div class="d-flex justify-content-end mt-3"><button class="btn btn-gold btn-sm" id="saveDayDetails">Save day details</button></div></div></div>
+        <div class="col-xl-5"><div class="panel h-100"><div class="panel-heading"><div><span class="eyebrow">DAILY SCORE</span><h3>How did you do?</h3></div><strong class="score-number" id="dailyScore">0%</strong></div><div class="progress custom-progress"><div class="progress-bar" id="dailyProgressBar" style="width:0%"></div></div><p class="muted mt-2 mb-3" id="dailyScoreText">Complete a habit to begin your progress.</p><div class="section-divider"></div><h4 class="small-heading">Missed habit notes</h4><p class="muted small">If you missed a habit, add a reason. This is only for your reflection.</p><div id="missedReasons" class="missed-reasons"></div></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-mandatory">
+      <div class="page-intro"><div><span class="eyebrow">YOUR WELL-BEING</span><h2>Mandatory routine</h2><p>Small daily essentials that help you take care of yourself.</p></div><button class="btn btn-gold" id="addMandatoryBtn"><i class="bi bi-plus-lg me-1"></i> Add mandatory</button></div>
+      <div class="row g-3 mb-3"><div class="col-md-4"><div class="stat-card compact-stat"><span>Today's routine score</span><strong id="mandatoryPageScore">0%</strong><small id="mandatoryPageSub">0 of 0 completed</small></div></div><div class="col-md-8"><div class="panel routine-tip"><i class="bi bi-flower1"></i><div><strong>Consistency over perfection</strong><p class="mb-0 muted">These are reminders, not reasons to feel guilty. Adjust routines when life requires it.</p></div></div></div></div>
+      <div class="panel"><div class="panel-heading"><div><span class="eyebrow">DAILY CHECKLIST</span><h3>My essential routines</h3></div><span class="subtle-tag" id="mandatoryDateLabel"></span></div><div id="mandatoryList" class="mandatory-list"></div><div class="mt-4"><div class="d-flex justify-content-between mb-2"><span class="muted small">Today's completion</span><strong id="mandatoryProgressLabel">0%</strong></div><div class="progress custom-progress"><div class="progress-bar gold-bar" id="mandatoryProgressBar" style="width:0%"></div></div></div></div>
+    </section>
+
+    <section class="page" id="page-weekly">
+      <div class="page-intro"><div><span class="eyebrow">LOOK BACK, MOVE FORWARD</span><h2>Weekly report</h2><p>Your first week can be shorter. After that, weeks run Sunday to Saturday.</p></div><div class="month-controls"><button class="btn icon-btn" id="prevWeek" aria-label="Previous week"><i class="bi bi-chevron-left"></i></button><input type="date" id="weekPicker" class="form-control date-input"><button class="btn icon-btn" id="nextWeek" aria-label="Next week"><i class="bi bi-chevron-right"></i></button></div></div>
+      <div id="weeklyReport"></div>
+    </section>
+
+    <section class="page" id="page-monthly">
+      <div class="page-intro"><div><span class="eyebrow">THE BIGGER PICTURE</span><h2>Monthly report</h2><p>See your patterns, wins, and opportunities to improve.</p></div><div class="month-controls"><button class="btn icon-btn" id="prevReportMonth" aria-label="Previous month"><i class="bi bi-chevron-left"></i></button><input type="month" id="reportMonth" class="form-control month-input"><button class="btn icon-btn" id="nextReportMonth" aria-label="Next month"><i class="bi bi-chevron-right"></i></button></div></div>
+      <div id="monthlyReport"></div>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="page-intro"><div><span class="eyebrow">YOUR TRACKER</span><h2>Settings & backup</h2><p>Keep your data safe and personalize your tracking start date.</p></div></div>
+      <div class="row g-3">
+        <div class="col-lg-6"><div class="panel"><h3>Tracking settings</h3><p class="muted">Your first weekly period starts on this date and ends on Saturday. Following weeks run Sunday–Saturday.</p><label class="form-label" for="startDateSetting">Tracking start date</label><input type="date" class="form-control dark-input" id="startDateSetting"><button class="btn btn-gold btn-sm mt-3" id="saveSettings">Save settings</button></div></div>
+        <div class="col-lg-6"><div class="panel"><h3>Cloud account</h3><p class="muted">Your tracker syncs to your private account, so the same data is available on your phone and laptop.</p><p class="small mb-2" id="accountEmail"></p><p class="small muted" id="cloudStatus">Cloud sync is ready.</p><button class="btn btn-outline-gold btn-sm" id="signOutBtn">Sign out</button></div></div>
+        <div class="col-lg-6"><div class="panel"><h3>Backup your tracker</h3><p class="muted">Export a JSON backup regularly. Import it later to restore your habits and history.</p><div class="d-flex flex-wrap gap-2"><button class="btn btn-outline-gold" id="exportBtn"><i class="bi bi-download me-1"></i> Export backup</button><label class="btn btn-outline-light mb-0"><i class="bi bi-upload me-1"></i> Import backup <input type="file" id="importFile" accept=".json,application/json" hidden></label></div><p class="small muted mt-3 mb-0" id="backupStatus">Your data is stored in this browser on this device.</p></div></div>
+      </div>
+      <div class="panel mt-3"><h3>About your data</h3><ul class="muted mb-0"><li>Your habits, completions, routines, notes and reports are saved to your private cloud account.</li><li>Use the same account on each device. Export backup is still available as an extra safety copy.</li><li>Deleting a habit archives it from the current list while preserving its earlier history.</li></ul></div>
+    </section>
+    <footer class="app-footer">Made for your growth <span>✦</span> One day at a time</footer>
+  </main>
+</div>
+
+<div class="modal fade" id="habitModal" tabindex="-1" aria-labelledby="habitModalTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content custom-modal"><div class="modal-header"><h5 class="modal-title" id="habitModalTitle">Add a habit</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button></div><form id="habitForm"><div class="modal-body"><label class="form-label" for="habitName">Habit name</label><input class="form-control dark-input" id="habitName" maxlength="60" required placeholder="e.g. Practice Python for 30 minutes"><label class="form-label mt-3" for="habitDescription">Optional note</label><input class="form-control dark-input" id="habitDescription" maxlength="120" placeholder="A small reminder for yourself"></div><div class="modal-footer"><button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button><button class="btn btn-gold" type="submit">Save habit</button></div></form></div></div></div>
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content message-modal"><div class="message-sparkle"><i class="bi bi-stars"></i></div><div class="modal-body text-center"><span class="eyebrow" id="messageEyebrow">A NOTE FOR YOU</span><h3 id="messageModalTitle">A new day awaits</h3><p id="messageModalText"></p><button class="btn btn-gold mt-3" data-bs-dismiss="modal">Let's do this <i class="bi bi-arrow-right ms-1"></i></button></div></div></div></div>
+<div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="appToast" class="toast custom-toast" role="status" aria-live="polite" aria-atomic="true"><div class="toast-body"><i class="bi bi-check-circle-fill me-2"></i><span id="toastText">Saved.</span></div></div></div>
+<div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+</body>
+</html>
